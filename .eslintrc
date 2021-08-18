@@ -19,9 +19,12 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@next/next/recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:jest/recommended",
     "plugin:jest-dom/recommended",
+    "plugin:testing-library/react",
+    "plugin:prettier/recommended",
     "prettier",
     "next",
     "next/core-web-vitals"
@@ -32,6 +35,9 @@
     "jsx-a11y",
     "jest",
     "jest-dom",
+    "react",
+    "react-hooks",
+    "testing-library",
     "prettier"
   ],
   "rules": {},
