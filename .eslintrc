@@ -41,9 +41,9 @@
     "prettier"
   ],
   "rules": {},
-  "settings":  {
-    "react":  {
-      "version":  "detect"
+  "settings": {
+    "react": {
+      "version": "detect"
     },
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"]
