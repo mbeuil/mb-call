@@ -1,0 +1,31 @@
+{
+  "home": {
+    "no_user_text": "Hello There ! It seems you're not connected."
+  },
+  "meta": {
+    "title": "MBCall",
+    "description": "A little test app using made by Maxime Beuil."
+  },
+  "nav": {
+    "language_goto": "français",
+    "language_list": "Language options list",
+    "language_selected": "Language button",
+    "logo": "Home",
+    "theme_dark": "Activate light mode",
+    "theme_light": "Activate dark mode",
+    "sign_in": "Sign in",
+    "sign_out": "Sign out"
+  },
+  "login": {
+    "title": "Please log in",
+    "text": "Sign in with your username and password.",
+    "placeholder_password": "Password",
+    "placeholder_username": "Username",
+    "submit": "Submit",
+    "meta_description": "MBCall's login page."
+  },
+  "footer": {
+    "by": "Made by :",
+    "link_github": "go to Maxime Beuil's Github"
+  }
+}

@@ -40,7 +40,9 @@
     "testing-library",
     "prettier"
   ],
-  "rules": {},
+  "rules": {
+    "no-console": "warn"
+  },
   "settings": {
     "react": {
       "version": "detect"

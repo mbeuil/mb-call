@@ -12,7 +12,7 @@
     "test:e2e": "is-ci test:e2e:run test:e2e:dev",
     "pretest:e2e:run": "npm run build",
     "test:e2e:run": "start-server-and-test start 3000 cy:run",
-    "test:e2e:dev":"start-server-and-test dev 3000 cy:open",
+    "test:e2e:dev": "start-server-and-test dev 3000 cy:open",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -30,7 +30,10 @@
     }
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "next": "11.1.0",
+    "next-auth": "^3.28.0",
+    "next-localization": "^0.11.0",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },
@@ -44,6 +47,7 @@
     "@types/jest": "^27.0.1",
     "@types/react": "17.0.18",
     "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "autoprefixer": "^10.3.1",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "commitizen": "^4.2.4",
     "cypress": "^8.3.0",
@@ -65,8 +69,10 @@
     "jest-watch-typeahead": "^0.6.4",
     "lint-staged": "^11.1.2",
     "npm-run-all": "^4.1.5",
+    "postcss": "^8.3.6",
     "prettier": "^2.3.2",
     "start-server-and-test": "^1.13.1",
+    "tailwindcss": "^2.2.7",
     "ts-jest": "^27.0.4",
     "typescript": "4.3.5"
   }

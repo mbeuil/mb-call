@@ -1,0 +1,31 @@
+{
+  "home": {
+    "no_user_text": "Bonjour ! Il semble que vous ne soyez pas encore connecté."
+  },
+  "meta": {
+    "title": "MBCall",
+    "description": "Petite app de test faite par Maxime Beuil."
+  },
+  "nav": {
+    "language_goto": "english",
+    "language_list": "Liste des langues",
+    "language_selected": "Choix de la langue",
+    "logo": "Accueil",
+    "theme_dark": "Activer le mode lumineux",
+    "theme_light": "Activer le mode sombre",
+    "sign_in": "S'identifier",
+    "sign_out": "Déconnexion"
+  },
+  "login": {
+    "title": "Veuillez vous connecter",
+    "text": "Connectez-vous via votre nom d'utilisateur et votre mot de passe.",
+    "placeholder_password": "Mot de passe",
+    "placeholder_username": "Pseudonyme",
+    "submit": "Valider",
+    "meta_description": "Page de Connexion de MBCall."
+  },
+  "footer": {
+    "by": "Fait par :",
+    "link_github": "lien vers le Github de Maxime Beuil"
+  }
+}
