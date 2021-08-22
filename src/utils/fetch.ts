@@ -15,14 +15,10 @@ export async function fetchPaginatedCalls({
   limit,
   calls = [],
 }: FetchPaginatedCallsProps): Promise<Call[]> {
-  const session = await getSession();
   const url = API_BASE_URL + '/calls';
   const data = await authRequest<PaginatedRessources>({
     method: 'get',
     url,
-    headers: {
-      Authorization: `Bearer ${session?.accessToken}`,
-    },
     params: { offset, limit },
   });
 
@@ -35,21 +31,29 @@ export async function fetchPaginatedCalls({
     : [...calls, ...data.nodes];
 }
 
-interface FetchCallWithIdProps {
+interface CallWithIdProps {
   id: string;
 }
 
 export async function fetchCallWithId({
   id,
-}: FetchCallWithIdProps): Promise<Call | null> {
-  const session = await getSession();
+}: CallWithIdProps): Promise<Call | null> {
   const url = API_BASE_URL + `/calls/${id}`;
   const data = await authRequest<Call | null>({
     method: 'get',
     url,
-    headers: {
-      Authorization: `Bearer ${session?.accessToken}`,
-    },
+  });
+
+  return data;
+}
+
+export async function changeCallState({
+  id,
+}: CallWithIdProps): Promise<Call | null> {
+  const url = API_BASE_URL + `/calls/${id}/archive`;
+  const data = await authRequest<Call | null>({
+    method: 'put',
+    url,
   });
 
   return data;
@@ -58,13 +62,15 @@ export async function fetchCallWithId({
 export async function authRequest<T>({
   method,
   url,
-  headers,
   params,
 }: AxiosRequestConfig): Promise<T> {
+  const session = await getSession();
   const response = await axios({
     method,
     url,
-    headers,
+    headers: {
+      Authorization: `Bearer ${session?.accessToken}`,
+    },
     params,
   }).catch((e) => {
     throw new Error(e.response.data.statusCode);

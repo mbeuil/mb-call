@@ -1,55 +1,31 @@
 import * as React from 'react';
 import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
+import { useI18n } from 'next-localization';
 
 import { useCall } from '@/hooks';
-import { AsyncStatus, Note } from '@/types';
+import { AsyncStatus } from '@/types';
 import { findCallInArray, formatTime, getCallColor } from '@/utils';
-import { useI18n } from 'next-localization';
 import { CallDirection } from '@/icons';
 import CallTypeDocumentation from '@/components/call-type-documentation';
-
-function NoteEntry({ content }: Note): JSX.Element {
-  return <p className="p-5 rounded-sm bg-opGreen text-primary">{content}</p>;
-}
-
-interface NoteScreenProps {
-  notes: Note[] | undefined;
-}
-
-function NoteScreen({ notes = [] }: NoteScreenProps): JSX.Element {
-  const i18n = useI18n();
-  const [input, setInput] = React.useState('');
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
-    setInput(e.target.value);
-
-  return (
-    <div className="flex flex-col w-full max-w-md p-5 border rounded-sm border-primary min-h-[466px]">
-      <ul className="flex flex-col h-full gap-5 mb-5">
-        {notes.map((note) => (
-          <NoteEntry key={note.id} {...note} />
-        ))}
-      </ul>
-      <input
-        aria-label={i18n.t('call_page.note_input')}
-        title={i18n.t('call_page.note_input')}
-        className="h-8 px-5 mt-auto bg-transparent border rounded-sm border-green"
-        placeholder="note"
-        value={input}
-        onChange={handleChange}
-      />
-    </div>
-  );
-}
+import NoteScreen from '@/components/note-screen';
+import ArchiveButton from '@/components/archive-button';
 
 function CallDisplay(): JSX.Element {
   const { callStatus, callList, call, fetchCall, setCall } = useCall();
   const router = useRouter();
   const i18n = useI18n();
   const [session] = useSession();
+  const [isArchived, setIsArchived] = React.useState<boolean | undefined>(
+    undefined,
+  );
 
   const cid = router.query.cid;
+
+  const isArchiveDisplayed =
+    typeof isArchived === 'boolean' ? isArchived : call?.is_archived;
+
+  const handleClick = (): void => setIsArchived(!isArchiveDisplayed);
 
   React.useEffect(() => {
     if (callList.length > 0 && typeof cid === 'string') {
@@ -115,7 +91,6 @@ function CallDisplay(): JSX.Element {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex flex-col w-full p-5 border rounded-sm border-primary">
                   <div className="w-5 h-5 m-auto">
                     <CallDirection
@@ -129,7 +104,7 @@ function CallDisplay(): JSX.Element {
                   <CallTypeDocumentation className="m-auto" />
                 </div>
               </div>
-              {call?.is_archived && (
+              {isArchiveDisplayed && (
                 <div className="flex w-full p-5 border rounded-sm border-primary">
                   <p className="m-auto font-mono text-primary">
                     {i18n.t('call_page.archive')}
@@ -138,6 +113,12 @@ function CallDisplay(): JSX.Element {
               )}
             </div>
             <NoteScreen notes={call?.notes} />
+          </div>
+          <div className="flex mt-5">
+            <p className="self-center mr-5 text-sm text-secondary">
+              {i18n.t('call_page.button_introduction')}
+            </p>
+            <ArchiveButton id={call?.id} onClick={handleClick} />
           </div>
         </>
       )}
