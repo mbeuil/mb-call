@@ -2,13 +2,13 @@ import * as React from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
+import { useI18n } from 'next-localization';
 
 import { useCall } from '@/hooks';
 import { Archive, CallDirection } from '@/icons';
 import { AsyncStatus, Call, Language } from '@/types';
 import { formatDate, getCallColor } from '@/utils';
 import CallTypeDocumentation from '@/components/call-type-documentation';
-import { useI18n } from 'next-localization';
 import Filter from '@/components/filter';
 
 function CallListRow(props: Call): JSX.Element {
@@ -46,7 +46,13 @@ function CallListRow(props: Call): JSX.Element {
 function Dashboard(): JSX.Element {
   const [session] = useSession();
   const i18n = useI18n();
-  const { callListStatus, callList, filteredCallList, fetchCalls } = useCall();
+  const {
+    callListStatus,
+    callList,
+    filteredCallList,
+    fetchCalls,
+    resetFilter,
+  } = useCall();
 
   React.useEffect(() => {
     if (session && session.accessToken && !callList.length) {
@@ -54,6 +60,13 @@ function Dashboard(): JSX.Element {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
+
+  React.useEffect(() => {
+    return () => {
+      resetFilter();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="flex flex-col items-center w-full m-5">

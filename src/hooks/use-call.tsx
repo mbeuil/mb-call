@@ -23,7 +23,8 @@ type CallReducerAction =
   | { type: 'FETCH_CALL_SUCCESS'; call: Call | null }
   | { type: 'FETCH_CALL_ERROR'; error: number }
   | { type: 'SET_CALL'; call: Call | undefined }
-  | { type: 'SET_STATE_FILTER'; option: StateOptions };
+  | { type: 'SET_STATE_FILTER'; option: StateOptions }
+  | { type: 'RESET_FILTER' };
 
 const initialState: CallReducerState = {
   callListStatus: AsyncStatus.IDLE,
@@ -92,6 +93,12 @@ const callReducer = (
         stateFilter: action.option,
       };
     }
+    case 'RESET_FILTER': {
+      return {
+        ...state,
+        stateFilter: StateOptions.DISABLE,
+      };
+    }
   }
 };
 
@@ -107,6 +114,7 @@ interface UseCall {
   fetchCall: ({ id }: { id: string }) => void;
   setCall: ({ call }: { call: Call | undefined }) => void;
   setStateFilter: ({ option }: { option: StateOptions }) => void;
+  resetFilter: () => void;
 }
 
 type CallConfig = UseCall | undefined;
@@ -194,6 +202,10 @@ export const CallProvider: React.FC = ({ ...props }) => {
     [],
   );
 
+  const resetFilter = React.useCallback(() => {
+    dispatch({ type: 'RESET_FILTER' });
+  }, []);
+
   return (
     <CallContext.Provider
       value={{
@@ -208,6 +220,7 @@ export const CallProvider: React.FC = ({ ...props }) => {
         fetchCall,
         setCall,
         setStateFilter,
+        resetFilter,
       }}
       {...props}
     />
