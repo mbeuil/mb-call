@@ -8,6 +8,6 @@ export const getCallColor = (type?: CallType): string => {
       return ' text-green';
     default:
     case CallType.VOICEMAIL:
-      return '';
+      return ' text-secondary';
   }
 };

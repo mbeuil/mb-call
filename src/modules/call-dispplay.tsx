@@ -95,9 +95,7 @@ function CallDisplay(): JSX.Element {
                   <div className="w-5 h-5 m-auto">
                     <CallDirection
                       direction={call?.direction}
-                      className={
-                        'w-5 h-5 text-secondary' + getCallColor(call?.call_type)
-                      }
+                      className={`w-5 h-5 ${getCallColor(call?.call_type)}`}
                     />
                   </div>
                   <div className="w-full my-3 border-b border-dashed border-primary" />

@@ -26,9 +26,7 @@ function CallListRow(props: Call): JSX.Element {
         <div className="w-4 h-4 ml-5 sm:w-5 sm:h-5">
           <CallDirection
             direction={direction}
-            className={
-              'w-4 h-4 sm:w-5 sm:h-5 text-secondary' + getCallColor(call_type)
-            }
+            className={`w-4 h-4 sm:w-5 sm:h-5 ${getCallColor(call_type)}`}
           />
         </div>
         <p className="w-full font-mono text-center text-primary">{via}</p>
