@@ -47,6 +47,9 @@
     "to": "vers",
     "duration": "durée",
     "archive": "Archivé",
+    "button_archive": "Archiver",
+    "button_unarchive": "Désarchiver",
+    "button_introduction": "Changer l'état de l'appel ?",
     "note_input": "entrer une nouvelle note"
   },
   "filter": {

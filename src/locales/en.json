@@ -47,6 +47,9 @@
     "to": "to",
     "duration": "duration",
     "archive": "Archive",
+    "button_archive": "Archive",
+    "button_unarchive": "Unarchive",
+    "button_introduction": "Change the call state ?",
     "note_input": "new note input"
   },
   "filter": {
