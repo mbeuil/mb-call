@@ -5,6 +5,7 @@ import type { Session } from 'next-auth';
 
 import Container from '@/components/container';
 import CallDisplay from '@/modules/call-dispplay';
+// import { EXPIRED_TIME_LIMIT } from '@/utils';
 
 export const getServerSideProps: GetServerSideProps<{
   session: Session | null;
@@ -27,6 +28,14 @@ function CID(): JSX.Element {
       signIn();
     }
   }, [loading, session]);
+
+  // Keep the Client session active for coding purpose
+  // React.useEffect(() => {
+  //   const sessionTimer = setInterval(() => {
+  //     getSession();
+  //   }, EXPIRED_TIME_LIMIT + 1000);
+  //   return () => clearTimeout(sessionTimer);
+  // }, []);
 
   return (
     <Container>
