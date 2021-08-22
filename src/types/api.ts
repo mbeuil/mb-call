@@ -1,3 +1,9 @@
+export interface PaginatedRessources {
+  nodes: Call[];
+  totalCount: number;
+  hasNextPage: boolean;
+}
+
 export interface Call {
   id: string; // "unique ID of call"
   direction: string; // "inbound" or "outbound" call
@@ -8,7 +14,7 @@ export interface Call {
   call_type: string; // The type of the call, it can be a missed, answered or voicemail.
   via: string; // Aircall number used for the call.
   created_at: string; // When the call has been made.
-  notes: any[]; // Notes related to a given call
+  notes: Note[]; // Notes related to a given call
 }
 
 export interface Note {
