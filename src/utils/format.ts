@@ -9,8 +9,7 @@ export const formatDate = (locale: string, date: Date): string => {
 };
 
 export const formatTime = (seconds?: number): string => {
-  const date = new Date((seconds || 0) * 1000);
-  const timeString = date.toTimeString().split(' ')[0];
+  const date = new Date((seconds || 0) * 1000).toISOString().substr(11, 8);
 
-  return timeString;
+  return date;
 };
