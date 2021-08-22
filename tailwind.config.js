@@ -6,6 +6,7 @@ module.exports = {
     extend: {
       backgroundColor: {
         primary: 'var(--color-bg)',
+        secondary: 'var(--color-secondary)',
         green: 'var(--color-green)',
         opGreen: 'var(--color-green-opacity)',
         altGreen: 'var(--color-green-alt)',
@@ -23,6 +24,9 @@ module.exports = {
       },
       minHeight: {
         main: 'calc(100vh - 48px - 48px)',
+      },
+      gridTemplateColumns: {
+        dashboard: 'auto 1fr auto',
       },
     },
   },

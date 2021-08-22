@@ -27,5 +27,25 @@
   "footer": {
     "by": "Fait par :",
     "link_github": "lien vers le Github de Maxime Beuil"
+  },
+  "dashboard": {
+    "h2": "List des appels :",
+    "loading": "En cours de chargement ...",
+    "error": "Une erreur s'est produite."
+  },
+  "call_type": {
+    "answered": "appel répondu",
+    "missed": "appel manqué",
+    "voicemail": "boîte vocale"
+  },
+  "call_page": {
+    "loading": "En cours de chargement ...",
+    "error": "Une erreur s'est produite.",
+    "title": "Données de l'appel",
+    "from": "de",
+    "to": "vers",
+    "duration": "durée",
+    "archive": "Archivé",
+    "note_input": "entrer une nouvelle note"
   }
 }

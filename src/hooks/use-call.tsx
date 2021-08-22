@@ -1,24 +1,30 @@
 import * as React from 'react';
 
-import { AsyncStatus } from '@/types/async-status';
-import { Call, PaginatedRessources } from '@/types';
-import { CALLS_LIMIT } from '@/utils';
-import { fetchPaginatedCalls } from '@/utils/fetch';
+import { AsyncStatus } from '@/types';
+import { Call } from '@/types';
+import { CALLS_LIMIT, fetchCallWithId, fetchPaginatedCalls } from '@/utils';
 
 interface CallReducerState {
+  callListStatus: AsyncStatus;
   callStatus: AsyncStatus;
   callList: Call[];
+  call?: Call;
   callInStore: number;
   totalCallsAvailable: number;
   error?: number;
 }
 
 type CallReducerAction =
-  | { type: 'START' }
-  | { type: 'SUCCESS'; paginatedCalls: PaginatedRessources }
-  | { type: 'ERROR'; error: number };
+  | { type: 'FETCH_CALL_LIST_START' }
+  | { type: 'FETCH_CALL_LIST_SUCCESS'; paginatedCalls: Call[] }
+  | { type: 'FETCH_CALL_LIST_ERROR'; error: number }
+  | { type: 'FETCH_CALL_START' }
+  | { type: 'FETCH_CALL_SUCCESS'; call: Call | null }
+  | { type: 'FETCH_CALL_ERROR'; error: number }
+  | { type: 'SET_CALL'; call: Call | undefined };
 
 const initialState: CallReducerState = {
+  callListStatus: AsyncStatus.IDLE,
   callStatus: AsyncStatus.IDLE,
   callList: [],
   callInStore: 0,
@@ -30,23 +36,47 @@ const callReducer = (
   action: CallReducerAction,
 ): CallReducerState => {
   switch (action.type) {
-    case 'START': {
-      return { ...state, callStatus: AsyncStatus.PENDING };
+    case 'FETCH_CALL_LIST_START': {
+      return { ...state, callListStatus: AsyncStatus.PENDING };
     }
-  }
-  switch (action.type) {
-    case 'SUCCESS': {
+    case 'FETCH_CALL_LIST_SUCCESS': {
+      const sortedCall = action.paginatedCalls.sort((a, b) =>
+        a.created_at < b.created_at ? 1 : -1,
+      );
+      return {
+        ...state,
+        callListStatus: AsyncStatus.RESOLVED,
+        callList: sortedCall,
+        totalCallsAvailable: action.paginatedCalls.length,
+      };
+    }
+    case 'FETCH_CALL_LIST_ERROR': {
+      return {
+        ...state,
+        callListStatus: AsyncStatus.REJECTED,
+        error: action.error,
+      };
+    }
+    case 'FETCH_CALL_START': {
+      return {
+        ...state,
+        callStatus: AsyncStatus.PENDING,
+      };
+    }
+    case 'SET_CALL':
+    case 'FETCH_CALL_SUCCESS': {
+      if (!action.call)
+        return {
+          ...state,
+          callStatus: AsyncStatus.REJECTED,
+        };
       return {
         ...state,
         callStatus: AsyncStatus.RESOLVED,
-        callList: action.paginatedCalls.nodes,
-        callInStore: action.paginatedCalls.nodes.length,
-        totalCallsAvailable: action.paginatedCalls.totalCount,
+        call: action.call,
       };
     }
-  }
-  switch (action.type) {
-    case 'ERROR': {
+    case 'FETCH_CALL_ERROR': {
       return {
         ...state,
         callStatus: AsyncStatus.REJECTED,
@@ -57,11 +87,15 @@ const callReducer = (
 };
 
 interface UseCall {
+  callListStatus: AsyncStatus;
   callStatus: AsyncStatus;
   callList: Call[];
   callInStore: number;
   totalCallsAvailable: number;
-  fetchCalls: ({ token }: { token: string }) => void;
+  call?: Call;
+  fetchCalls: () => void;
+  fetchCall: ({ id }: { id: string }) => void;
+  setCall: ({ call }: { call: Call | undefined }) => void;
 }
 
 type CallConfig = UseCall | undefined;
@@ -80,9 +114,13 @@ export const useCall = (): UseCall => {
 export const CallProvider: React.FC = ({ ...props }) => {
   const [calls, dispatch] = React.useReducer(callReducer, initialState);
 
+  const callListStatus = React.useMemo(() => calls.callListStatus, [calls]);
+
   const callStatus = React.useMemo(() => calls.callStatus, [calls]);
 
   const callList = React.useMemo(() => calls.callList, [calls]);
+
+  const call = React.useMemo(() => calls.call, [calls]);
 
   const callInStore = React.useMemo(() => calls.callInStore, [calls]);
 
@@ -91,31 +129,53 @@ export const CallProvider: React.FC = ({ ...props }) => {
     [calls],
   );
 
-  const fetchCalls = React.useCallback(
-    async ({ token }: { token: string }) => {
-      dispatch({ type: 'START' });
+  const fetchCalls = React.useCallback(async () => {
+    dispatch({ type: 'FETCH_CALL_LIST_START' });
 
-      fetchPaginatedCalls({
-        offset: callInStore,
-        limit: callInStore + CALLS_LIMIT,
-        token: token,
+    fetchPaginatedCalls({
+      offset: 0,
+      limit: CALLS_LIMIT,
+    })
+      .then((paginatedCalls) =>
+        dispatch({ type: 'FETCH_CALL_LIST_SUCCESS', paginatedCalls }),
+      )
+      .catch((error: number) => {
+        dispatch({ type: 'FETCH_CALL_LIST_ERROR', error });
+      });
+  }, []);
+
+  const fetchCall = React.useCallback(({ id }: { id: string }) => {
+    dispatch({ type: 'FETCH_CALL_START' });
+
+    fetchCallWithId({ id })
+      .then((call) => {
+        dispatch({ type: 'FETCH_CALL_SUCCESS', call });
+        return call;
       })
-        .then((paginatedCalls) => dispatch({ type: 'SUCCESS', paginatedCalls }))
-        .catch((error: number) => {
-          dispatch({ type: 'ERROR', error });
-        });
-    },
-    [callInStore],
-  );
+      .catch((error: number) => {
+        dispatch({ type: 'FETCH_CALL_ERROR', error });
+        return null;
+      });
+
+    return null;
+  }, []);
+
+  const setCall = React.useCallback(({ call }: { call: Call | undefined }) => {
+    dispatch({ type: 'SET_CALL', call });
+  }, []);
 
   return (
     <CallContext.Provider
       value={{
+        callListStatus,
         callStatus,
         callList,
         callInStore,
         totalCallsAvailable,
+        call,
         fetchCalls,
+        fetchCall,
+        setCall,
       }}
       {...props}
     />

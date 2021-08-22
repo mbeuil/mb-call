@@ -27,5 +27,25 @@
   "footer": {
     "by": "Made by :",
     "link_github": "go to Maxime Beuil's Github"
+  },
+  "dashboard": {
+    "h2": "List of calls :",
+    "loading": "Is loading ...",
+    "error": "An error happened."
+  },
+  "call_type": {
+    "answered": "answered call",
+    "missed": "missed call",
+    "voicemail": "voicemail"
+  },
+  "call_page": {
+    "loading": "Is loading ...",
+    "error": "An error happened.",
+    "title": "Call Data",
+    "from": "from",
+    "to": "to",
+    "duration": "duration",
+    "archive": "Archive",
+    "note_input": "new note input"
   }
 }

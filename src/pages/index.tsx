@@ -5,6 +5,8 @@ import type { GetServerSideProps } from 'next';
 import type { Session } from 'next-auth';
 
 import Container from '@/components/container';
+import Dashboard from '@/modules/dashboard';
+import { EXPIRED_TIME_LIMIT } from '@/utils';
 
 export const getServerSideProps: GetServerSideProps<{
   session: Session | null;
@@ -29,12 +31,20 @@ function Home(): JSX.Element {
     }
   }, [session]);
 
+  // Keep the Client session active for coding purpose
+  React.useEffect(() => {
+    const sessionTimer = setInterval(() => {
+      getSession();
+    }, EXPIRED_TIME_LIMIT + 1000);
+    return () => clearTimeout(sessionTimer);
+  }, []);
+
   return (
     <Container>
-      {!session && <p>{i18n.t('home.no_user_text')}</p>}
-      {session && (
-        <h1 className="text-3xl text-gray-900 sm:text-5xl">Hello World</h1>
+      {!session && (
+        <p className="text-primary">{i18n.t('home.no_user_text')}</p>
       )}
+      {session && <Dashboard />}
     </Container>
   );
 }
