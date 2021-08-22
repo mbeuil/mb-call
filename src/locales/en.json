@@ -29,9 +29,10 @@
     "link_github": "go to Maxime Beuil's Github"
   },
   "dashboard": {
-    "h2": "List of calls :",
+    "h2": "List of calls",
     "loading": "Is loading ...",
-    "error": "An error happened."
+    "error": "An error happened.",
+    "empty_search": "Nothing was found."
   },
   "call_type": {
     "answered": "answered call",
@@ -47,5 +48,12 @@
     "duration": "duration",
     "archive": "Archive",
     "note_input": "new note input"
+  },
+  "filter": {
+    "text": "filters :",
+    "disable": "disable",
+    "state": "state",
+    "archive": "archive",
+    "not_archive": "not_archive"
   }
 }

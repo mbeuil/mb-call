@@ -31,7 +31,8 @@
   "dashboard": {
     "h2": "List des appels :",
     "loading": "En cours de chargement ...",
-    "error": "Une erreur s'est produite."
+    "error": "Une erreur s'est produite.",
+    "empty_search": "Rien ne correspond."
   },
   "call_type": {
     "answered": "appel répondu",
@@ -47,5 +48,12 @@
     "duration": "durée",
     "archive": "Archivé",
     "note_input": "entrer une nouvelle note"
+  },
+  "filter": {
+    "text": "filtres :",
+    "disable": "désactivé",
+    "state": "état",
+    "archive": "archivé",
+    "not_archive": "non archivé"
   }
 }

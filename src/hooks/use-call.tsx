@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { AsyncStatus } from '@/types';
+import { AsyncStatus, StateOptions } from '@/types';
 import { Call } from '@/types';
 import { CALLS_LIMIT, fetchCallWithId, fetchPaginatedCalls } from '@/utils';
 
@@ -11,6 +11,7 @@ interface CallReducerState {
   call?: Call;
   callInStore: number;
   totalCallsAvailable: number;
+  stateFilter: StateOptions;
   error?: number;
 }
 
@@ -21,7 +22,8 @@ type CallReducerAction =
   | { type: 'FETCH_CALL_START' }
   | { type: 'FETCH_CALL_SUCCESS'; call: Call | null }
   | { type: 'FETCH_CALL_ERROR'; error: number }
-  | { type: 'SET_CALL'; call: Call | undefined };
+  | { type: 'SET_CALL'; call: Call | undefined }
+  | { type: 'SET_STATE_FILTER'; option: StateOptions };
 
 const initialState: CallReducerState = {
   callListStatus: AsyncStatus.IDLE,
@@ -29,6 +31,7 @@ const initialState: CallReducerState = {
   callList: [],
   callInStore: 0,
   totalCallsAvailable: 0,
+  stateFilter: StateOptions.DISABLE,
 };
 
 const callReducer = (
@@ -83,6 +86,12 @@ const callReducer = (
         error: action.error,
       };
     }
+    case 'SET_STATE_FILTER': {
+      return {
+        ...state,
+        stateFilter: action.option,
+      };
+    }
   }
 };
 
@@ -90,12 +99,14 @@ interface UseCall {
   callListStatus: AsyncStatus;
   callStatus: AsyncStatus;
   callList: Call[];
+  filteredCallList: Call[];
   callInStore: number;
   totalCallsAvailable: number;
   call?: Call;
   fetchCalls: () => void;
   fetchCall: ({ id }: { id: string }) => void;
   setCall: ({ call }: { call: Call | undefined }) => void;
+  setStateFilter: ({ option }: { option: StateOptions }) => void;
 }
 
 type CallConfig = UseCall | undefined;
@@ -119,6 +130,18 @@ export const CallProvider: React.FC = ({ ...props }) => {
   const callStatus = React.useMemo(() => calls.callStatus, [calls]);
 
   const callList = React.useMemo(() => calls.callList, [calls]);
+
+  const filteredCallList = React.useMemo(() => {
+    const { stateFilter } = calls;
+    return callList.filter((call) =>
+      stateFilter === StateOptions.ARCHIVE
+        ? call.is_archived
+        : stateFilter === StateOptions.NOT_ARCHIVE
+        ? !call.is_archived
+        : true,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [calls]);
 
   const call = React.useMemo(() => calls.call, [calls]);
 
@@ -164,18 +187,27 @@ export const CallProvider: React.FC = ({ ...props }) => {
     dispatch({ type: 'SET_CALL', call });
   }, []);
 
+  const setStateFilter = React.useCallback(
+    ({ option }: { option: StateOptions }) => {
+      dispatch({ type: 'SET_STATE_FILTER', option });
+    },
+    [],
+  );
+
   return (
     <CallContext.Provider
       value={{
         callListStatus,
         callStatus,
         callList,
+        filteredCallList,
         callInStore,
         totalCallsAvailable,
         call,
         fetchCalls,
         fetchCall,
         setCall,
+        setStateFilter,
       }}
       {...props}
     />
