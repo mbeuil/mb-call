@@ -38,6 +38,8 @@ function SignIn(): JSX.Element {
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>): void =>
     setPassword(e.target.value);
 
+  const isSubmitDisable = !username.length || !password.length;
+
   const meta = {
     description: i18n.t('login.meta_description'),
   };
@@ -77,7 +79,10 @@ function SignIn(): JSX.Element {
           />
         </div>
         <button
-          className="rounded bg-green px-[19px] py-[14px] hover:bg-altGreen w-64"
+          className={`rounded bg-green px-[19px] py-[14px] hover:bg-altGreen w-64 ${
+            isSubmitDisable && 'cursor-default'
+          }`}
+          disabled={isSubmitDisable}
           type="submit">
           {i18n.t('login.submit')}
         </button>
